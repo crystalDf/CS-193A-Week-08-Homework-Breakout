@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 
 public class BreakoutFragment extends Fragment {
 
+    public static final float SCREEN_WIDTH = 400;
+    public static final float SCREEN_HEIGHT = 600;
+
     public static BreakoutFragment newInstance() {
         return new BreakoutFragment();
     }
