@@ -3,6 +3,8 @@ package com.star.breakout;
 
 import android.graphics.Color;
 
+import java.util.ArrayList;
+
 public class PriceBall extends Ball {
 
     private static final int[] COLORS = {
@@ -15,4 +17,5 @@ public class PriceBall extends Ball {
     private static final float VELOCITY_Y_MIN = 3;
     private static final float VELOCITY_Y_MAX = 4;
 
+    private static ArrayList<PriceBall> sPriceBalls;
 }
