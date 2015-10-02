@@ -5,10 +5,10 @@ import android.graphics.Color;
 
 public class Level extends Label {
 
-    public static final int INIT_LEVEL = 1;
+    public static final int INIT_LEVEL = 2;
     public static final int TOTAL_LEVELS = 5;
 
-    public static final float INIT_ENHANCED_PROBABILITY = 0.2f;
+    public static final float INIT_ENHANCED_PROBABILITY = 0.05f;
 
     private static final float OFFSET_LEFT_RATIO = 0.05f;
     private static final float OFFSET_TOP_RATIO = 0.05f;

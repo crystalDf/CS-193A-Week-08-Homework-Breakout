@@ -50,7 +50,7 @@ public class PriceBall extends Ball {
         return sPriceBalls;
     }
 
-    public void checkForPaddleCollision(Paddle paddle, List<Brick> bricks) {
+    public boolean checkForPaddleCollision(Paddle paddle, List<Brick> bricks) {
         if (RectF.intersects(getRectF(), paddle.getRectF()) && getVelocityY() > 0 ) {
             removeLastEnhancedCapability(paddle);
 
@@ -58,15 +58,19 @@ public class PriceBall extends Ball {
 
             addEnhancedCapability(paddle, bricks);
 
-            sPriceBalls.remove(this);
+            return sPriceBalls.remove(this);
         }
+
+        return false;
 
     }
 
-    public void checkForBottomCollision() {
+    public boolean checkForBottomCollision() {
         if (getRectF().bottom > mScreenHeight) {
-            sPriceBalls.remove(this);
+            return sPriceBalls.remove(this);
         }
+
+        return false;
     }
 
     private void removeLastEnhancedCapability(Paddle paddle) {

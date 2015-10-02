@@ -96,11 +96,13 @@ public class BreakoutView extends View {
             commonBall.checkForBottomCollision(mLife, mMessage, mDrawingThread);
         }
 
-        for (PriceBall priceBall : mPriceBalls) {
-            priceBall.move();
+        for (int i = 0; i < mPriceBalls.size();) {
+            mPriceBalls.get(i).move();
 
-            priceBall.checkForPaddleCollision(mPaddle, mBricks);
-            priceBall.checkForBottomCollision();
+            if (!mPriceBalls.get(i).checkForPaddleCollision(mPaddle, mBricks)
+                    && !mPriceBalls.get(i).checkForBottomCollision()) {
+                i++;
+            }
         }
 
     }
