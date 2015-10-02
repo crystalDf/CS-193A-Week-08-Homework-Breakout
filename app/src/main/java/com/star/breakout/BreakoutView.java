@@ -27,6 +27,7 @@ public class BreakoutView extends View {
     private Level mLevel;
     private Score mScore;
     private Life mLife;
+    private Message mMessage;
 
     public BreakoutView(Context context, AttributeSet attrs) {
 
@@ -40,6 +41,7 @@ public class BreakoutView extends View {
         mLevel = new Level(mScreenWidth, mScreenHeight);
         mScore = new Score(mScreenWidth, mScreenHeight);
         mLife = new Life(mScreenWidth, mScreenHeight);
+        mMessage = new Message(mScreenWidth, mScreenHeight);
 
         mPaddle = Paddle.getInstance(mScreenWidth, mScreenHeight);
         mBricks = Brick.initBricks(mScreenWidth, mScreenHeight, mLevel);
@@ -68,6 +70,8 @@ public class BreakoutView extends View {
                 mScore.getPaint());
         canvas.drawText(mLife.getLabel(), mLife.getOffsetLeft(), mLife.getOffsetTop(),
                 mLife.getPaint());
+        canvas.drawText(mMessage.getLabel(), mMessage.getOffsetLeft(), mMessage.getOffsetTop(),
+                mMessage.getPaint());
 
         updateBalls();
 
@@ -80,8 +84,8 @@ public class BreakoutView extends View {
 
             commonBall.checkForSideCollision();
             commonBall.checkForPaddleCollision(mPaddle);
-            commonBall.checkForBrickCollision(mBricks, mScore);
-            commonBall.checkForBottomCollision(mLife);
+            commonBall.checkForBrickCollision(mBricks, mScore, mLevel, mMessage, mDrawingThread);
+            commonBall.checkForBottomCollision(mLife, mMessage, mDrawingThread);
         }
 
     }
@@ -101,7 +105,8 @@ public class BreakoutView extends View {
                 if (y < mScreenHeight / 2) {
                     if (mDrawingThread.isRunning()) {
                         mDrawingThread.stop();
-                    } else {
+                    } else if (mLife.getCurrentLife() > 0 && mBricks.size() > 0) {
+                        mMessage.setLabel(Message.EMPTY);
                         mDrawingThread.start();
                     }
                 } else {

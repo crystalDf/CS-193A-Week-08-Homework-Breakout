@@ -62,6 +62,8 @@ public class CommonBall extends Ball {
             setVelocity(-dx, dy);
         }
 
+        setLaserCapable(true);
+
         sCommonBalls.add(this);
     }
 
@@ -129,7 +131,7 @@ public class CommonBall extends Ball {
         }
     }
 
-    public void checkForBrickCollision(List<Brick> bricks, Score score) {
+    public void checkForBrickCollision(List<Brick> bricks, Score score, Level level, Message message, DrawingThread drawingThread) {
         for (int i = bricks.size() - 1; i >= 0; i--) {
             if (RectF.intersects(getRectF(), bricks.get(i).getRectF())) {
 
@@ -156,12 +158,38 @@ public class CommonBall extends Ball {
                 }
             }
         }
+
+        if (bricks.size() == 0) {
+
+            sCommonBalls.clear();
+
+            if (level.getCurrentLevel() == Level.TOTAL_LEVELS) {
+                message.setLabel(Message.WIN_RESULT);
+            } else {
+                level.setCurrentLevel(level.getCurrentLevel() + 1);
+                Brick.initBricks(mScreenWidth, mScreenHeight, level);
+                initCommonBalls(mScreenWidth, mScreenHeight);
+                message.setLabel(Message.START_PROMPT);
+            }
+
+            drawingThread.stop();
+        }
     }
 
-    public void checkForBottomCollision(Life life) {
+    public void checkForBottomCollision(Life life, Message message, DrawingThread drawingThread) {
         if (getRectF().bottom > mScreenHeight) {
             sCommonBalls.remove(this);
             life.setCurrentLife(life.getCurrentLife() - 1);
+
+            if (life.getCurrentLife() > 0) {
+                initCommonBalls(mScreenWidth, mScreenHeight);
+                message.setLabel(Message.START_PROMPT);
+            } else {
+                message.setLabel(Message.LOSE_RESULT);
+            }
+
+            drawingThread.stop();
+
         }
     }
 }
