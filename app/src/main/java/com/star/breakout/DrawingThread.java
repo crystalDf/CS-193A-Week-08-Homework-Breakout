@@ -7,7 +7,7 @@ import android.view.View;
 
 public class DrawingThread {
 
-    protected static final float PAUSE_TIME = 20;
+    protected static final int FPS = 50;
 
     private View mView;
     private int mFps;

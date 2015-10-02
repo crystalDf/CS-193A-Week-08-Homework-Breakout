@@ -56,7 +56,7 @@ public class Brick {
         mRectF.offsetTo(x, y);
     }
 
-    public static List<Brick> initBricks(float screenWidth, float screenHeight) {
+    public static List<Brick> initBricks(float screenWidth, float screenHeight, Level level) {
 
         float spacing = screenWidth * SPACING_RATIO;
 
@@ -66,28 +66,24 @@ public class Brick {
         float offsetLeft = (screenWidth - COLUMNS * width - (COLUMNS - 1) * spacing) / 2;
         float offsetTop = screenHeight * OFFSET_TOP_RATIO;
 
-        Level.setCurrentLevel(3);
-        int currentLevel = Level.getCurrentLevel();
+        initBaseBricks(width, height, spacing, offsetLeft, offsetTop);
+
+        int currentLevel = level.getCurrentLevel();
 
         switch (currentLevel) {
-            case 1:
-                initBricksLevel1(width, height, spacing, offsetLeft, offsetTop);
-                break;
-
-            case 2:
-                initBricksLevel2(width, height, spacing, offsetLeft, offsetTop);
-                break;
-
             case 3:
-                initBricksLevel3(width, height, spacing, offsetLeft, offsetTop);
+                initMaskBricks(width, height, spacing, offsetLeft, offsetTop,
+                        ROWS - 2, MASK_COLORS.length - 2);
                 break;
 
             case 4:
-                initBricksLevel4(width, height, spacing, offsetLeft, offsetTop);
+                initMaskBricks(width, height, spacing, offsetLeft, offsetTop,
+                        ROWS - 2, MASK_COLORS.length);
                 break;
 
             case 5:
-                initBricksLevel5(width, height, spacing, offsetLeft, offsetTop);
+                initMaskBricks(width, height, spacing, offsetLeft, offsetTop,
+                        0, MASK_COLORS.length);
                 break;
 
             default:
@@ -95,49 +91,6 @@ public class Brick {
         }
 
         return sBricks;
-    }
-
-    private static void initBricksLevel1(float width, float height, float spacing,
-                                         float offsetLeft, float offsetTop) {
-
-        initBaseBricks(width, height, spacing, offsetLeft, offsetTop);
-
-        Level.setCurrentEnhancedProbability(0);
-    }
-
-    private static void initBricksLevel2(float width, float height, float spacing,
-                                         float offsetLeft, float offsetTop) {
-
-        initBaseBricks(width, height, spacing, offsetLeft, offsetTop);
-
-        Level.setCurrentEnhancedProbability(Level.INIT_ENHANCED_PROBABILITY);
-    }
-
-    private static void initBricksLevel3(float width, float height, float spacing,
-                                         float offsetLeft, float offsetTop) {
-
-        initBricksLevel2(width, height, spacing, offsetLeft, offsetTop);
-
-        initMaskBricks(width, height, spacing, offsetLeft, offsetTop,
-                ROWS - 2, MASK_COLORS.length - 2);
-    }
-
-    private static void initBricksLevel4(float width, float height, float spacing,
-                                         float offsetLeft, float offsetTop) {
-
-        initBricksLevel2(width, height, spacing, offsetLeft, offsetTop);
-
-        initMaskBricks(width, height, spacing, offsetLeft, offsetTop,
-                ROWS - 2, MASK_COLORS.length);
-    }
-
-    private static void initBricksLevel5(float width, float height, float spacing,
-                                         float offsetLeft, float offsetTop) {
-
-        initBricksLevel2(width, height, spacing, offsetLeft, offsetTop);
-
-        initMaskBricks(width, height, spacing, offsetLeft, offsetTop,
-                0, MASK_COLORS.length);
     }
 
     private static void initBaseBricks(float width, float height, float spacing,

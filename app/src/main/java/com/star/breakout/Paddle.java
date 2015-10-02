@@ -18,6 +18,8 @@ public class Paddle {
 
     private static Paddle sPaddle;
 
+    private boolean mSticky;
+
     private Paddle(float screenWidth, float screenHeight) {
 
         float width = screenWidth * WIDTH_RATIO;
@@ -59,6 +61,14 @@ public class Paddle {
 
     public void setPaint(Paint paint) {
         mPaint = paint;
+    }
+
+    public boolean isSticky() {
+        return mSticky;
+    }
+
+    public void setSticky(boolean sticky) {
+        mSticky = sticky;
     }
 
     public void setSize(float width, float height) {

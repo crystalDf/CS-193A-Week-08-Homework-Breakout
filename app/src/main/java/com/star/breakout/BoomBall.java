@@ -15,7 +15,7 @@ public class BoomBall extends Ball {
     private static final float VELOCITY_Y_MIN = 3;
     private static final float VELOCITY_Y_MAX = 4;
 
-    private static final float INIT_PERIOD = 60 * 1000 / DrawingThread.PAUSE_TIME;
+    private static final float INIT_PERIOD = 60 * 1000 / DrawingThread.FPS;
 
     private static ArrayList<BoomBall> sBoomBalls;
 
