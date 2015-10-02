@@ -41,4 +41,14 @@ public class Score extends Label {
         setLabel(SCORE + mCurrentScore);
     }
 
+    public int calculateScore(Brick brick) {
+        for (int i = 0; i < Brick.COLORS.length; i++) {
+            if (brick.getPaint().getColor() == Brick.COLORS[i]) {
+                return Brick.COLORS.length - i;
+            }
+        }
+
+        return 0;
+    }
+
 }

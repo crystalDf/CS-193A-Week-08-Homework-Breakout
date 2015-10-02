@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Brick {
 
-    private static final int[] COLORS = {
+    public static final int[] COLORS = {
             Color.RED, Color.YELLOW, Color.GREEN, Color.CYAN, Color.BLUE};
     private static final int[] MASK_COLORS = {Color.LTGRAY, Color.GRAY, Color.DKGRAY};
 

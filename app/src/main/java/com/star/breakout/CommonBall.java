@@ -11,7 +11,7 @@ public class CommonBall extends Ball {
 
     private static final int COLOR = Color.BLACK;
 
-    private static final float DIAMETER_RATIO = 0.08f;
+    private static final float DIAMETER_RATIO = 0.06f;
 
     private static final float VELOCITY_X_MIN_RATIO = 0.005f;
     private static final float VELOCITY_X_MAX_RATIO = 0.015f;
@@ -21,7 +21,7 @@ public class CommonBall extends Ball {
     private static final float VELOCITY_MAX_RATIO = 0.040f;
 
     private static final int DOUBLE_VELOCITY_EVERY_N_COLLISION = 7;
-    private int collisionTimes;
+    private static int sCollisionTimes;
 
     private static List<CommonBall> sCommonBalls = new ArrayList<>();
 
@@ -65,6 +65,10 @@ public class CommonBall extends Ball {
         setLaserCapable(true);
 
         sCommonBalls.add(this);
+
+        if (sCommonBalls.size() == 1) {
+            sCollisionTimes = 0;
+        }
     }
 
     public boolean isLaserCapable() {
@@ -99,8 +103,7 @@ public class CommonBall extends Ball {
         return mOffsetByPaddleY;
     }
 
-    public static List<CommonBall> initCommonBalls(float screenWidth, float screenHeight) {
-        new CommonBall(screenWidth, screenHeight);
+    public static List<CommonBall> getCommonBalls() {
         return sCommonBalls;
     }
 
@@ -121,13 +124,46 @@ public class CommonBall extends Ball {
     public void checkForPaddleCollision(Paddle paddle) {
         if (RectF.intersects(getRectF(), paddle.getRectF()) && getVelocityY() > 0 ) {
 
-            setVelocityY(-Math.abs(getVelocityY()));
+            float centerX = (getRectF().left + getRectF().right) / 2;
+            float centerY = (getRectF().top + getRectF().bottom) / 2;
 
-            if (paddle.isSticky()) {
-                setSticky(true);
-                mOffsetByPaddleX = getRectF().left - paddle.getRectF().left;
-                mOffsetByPaddleY = getRectF().top - paddle.getRectF().top;
+            if (centerX < paddle.getRectF().left) {
+                setVelocityX(-Math.abs(getVelocityY()));
+                if (centerY < paddle.getRectF().top) {
+                    setVelocityY(-Math.abs(getVelocityX()));
+                } else {
+                    setVelocityY(Math.abs(getVelocityX()));
+                }
+            } else if (centerX > paddle.getRectF().right) {
+                setVelocityX(Math.abs(getVelocityY()));
+                if (centerY < paddle.getRectF().top) {
+                    setVelocityY(-Math.abs(getVelocityX()));
+                } else {
+                    setVelocityY(Math.abs(getVelocityX()));
+                }
+            } else if (centerY < paddle.getRectF().top) {
+                setVelocityY(-Math.abs(getVelocityY()));
             }
+
+            if (centerY < paddle.getRectF().top) {
+
+                sCollisionTimes++;
+
+                if (sCollisionTimes == DOUBLE_VELOCITY_EVERY_N_COLLISION) {
+                    for (CommonBall commonBall : sCommonBalls) {
+                        commonBall.multiplyVelocityByFactor(2);
+                    }
+                    sCollisionTimes = 0;
+                }
+
+                if (paddle.isSticky()) {
+                    mOffsetByPaddleX = getRectF().left - paddle.getRectF().left;
+                    mOffsetByPaddleY = getRectF().top - paddle.getRectF().top;
+
+                    setSticky(true);
+                }
+            }
+
         }
     }
 
@@ -146,13 +182,19 @@ public class CommonBall extends Ball {
 
                     setVelocityY(-getVelocityY());
 
-                    score.setCurrentScore(score.getCurrentScore() + 1);
+                    score.setCurrentScore(score.getCurrentScore()
+                            + score.calculateScore(bricks.get(i)));
+
+                    level.determineEnhancedBall(bricks.get(i));
 
                     bricks.remove(bricks.get(i));
                     break;
                 } else {
 
-                    score.setCurrentScore(score.getCurrentScore() + 1);
+                    score.setCurrentScore(score.getCurrentScore()
+                            + score.calculateScore(bricks.get(i)));
+
+                    level.determineEnhancedBall(bricks.get(i));
 
                     bricks.remove(bricks.get(i));
                 }
@@ -168,7 +210,7 @@ public class CommonBall extends Ball {
             } else {
                 level.setCurrentLevel(level.getCurrentLevel() + 1);
                 Brick.initBricks(mScreenWidth, mScreenHeight, level);
-                initCommonBalls(mScreenWidth, mScreenHeight);
+                new CommonBall(mScreenWidth, mScreenHeight);
                 message.setLabel(Message.START_PROMPT);
             }
 
@@ -182,7 +224,7 @@ public class CommonBall extends Ball {
             life.setCurrentLife(life.getCurrentLife() - 1);
 
             if (life.getCurrentLife() > 0) {
-                initCommonBalls(mScreenWidth, mScreenHeight);
+                new CommonBall(mScreenWidth, mScreenHeight);
                 message.setLabel(Message.START_PROMPT);
             } else {
                 message.setLabel(Message.LOSE_RESULT);
@@ -192,4 +234,25 @@ public class CommonBall extends Ball {
 
         }
     }
+
+    public void multiplyVelocityByFactor(float factor) {
+
+        float newFactor = 1;
+        float velocityXYMax = Math.max(getVelocityX(), getVelocityY());
+        float velocityXYMin = Math.min(getVelocityX(), getVelocityY());
+
+        if (factor > 1) {
+            newFactor = velocityXYMax * factor <=
+                    mScreenWidth * VELOCITY_MAX_RATIO ? factor
+                    : mScreenWidth * VELOCITY_MAX_RATIO / velocityXYMax;
+        } else if (factor < 1) {
+            newFactor = velocityXYMin * factor >=
+                    mScreenWidth * VELOCITY_MIN_RATIO ? factor
+                    : mScreenWidth * VELOCITY_MIN_RATIO / velocityXYMin;
+        }
+
+        setVelocity(getVelocityX() * newFactor, getVelocityY() * newFactor);
+    }
+
+
 }

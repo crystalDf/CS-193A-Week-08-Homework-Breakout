@@ -79,4 +79,8 @@ public class Paddle {
     public void setLocation(float x, float y) {
         mRectF.offsetTo(x, y);
     }
+
+    public void multiplySizeByFactor(float factor) {
+        setSize(getRectF().width() * factor, getRectF().height() * factor);
+    }
 }
