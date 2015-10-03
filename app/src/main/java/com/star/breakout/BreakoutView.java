@@ -44,11 +44,19 @@ public class BreakoutView extends View {
         mMessage = new Message(mScreenWidth, mScreenHeight);
 
         mPaddle = Paddle.getInstance(mScreenWidth, mScreenHeight);
-        mBricks = Brick.initBricks(mScreenWidth, mScreenHeight, mLevel);
 
-        new CommonBall(mScreenWidth, mScreenHeight);
+        mBricks = Brick.getBricks();
+
+        if (mBricks.size() == 0) {
+            Brick.setBricks(mScreenWidth, mScreenHeight, mLevel);
+        }
 
         mCommonBalls = CommonBall.getCommonBalls();
+
+        if (mCommonBalls.size() == 0) {
+            new CommonBall(mScreenWidth, mScreenHeight);
+        }
+
         mBonusBalls = BonusBall.getBonusBalls();
 
         mDrawingThread = new DrawingThread(this, DrawingThread.FPS);
@@ -93,8 +101,8 @@ public class BreakoutView extends View {
             mCommonBalls.get(i).checkForSideCollision();
             mCommonBalls.get(i).checkForPaddleCollision(mPaddle);
 
-            if (!mCommonBalls.get(i).checkForBrickCollision(mBricks, mScore, mLevel, mMessage, mDrawingThread)
-                    && !mCommonBalls.get(i).checkForBottomCollision(mLife, mMessage, mDrawingThread)) {
+            if (!mCommonBalls.get(i).checkForBrickCollision(mBricks, mPaddle, mScore, mLevel, mMessage, mDrawingThread)
+                    && !mCommonBalls.get(i).checkForBottomCollision(mPaddle, mLife, mMessage, mDrawingThread)) {
                 i++;
             }
         }

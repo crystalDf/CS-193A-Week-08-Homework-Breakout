@@ -20,7 +20,13 @@ public class Paddle {
 
     private boolean mSticky;
 
+    private float mScreenWidth;
+    private float mScreenHeight;
+
     private Paddle(float screenWidth, float screenHeight) {
+
+        mScreenWidth = screenWidth;
+        mScreenHeight = screenHeight;
 
         float width = screenWidth * WIDTH_RATIO;
         float height = screenHeight * HEIGHT_RATIO;
@@ -80,7 +86,15 @@ public class Paddle {
         mRectF.offsetTo(x, y);
     }
 
-    public void multiplySizeByFactor(float factor) {
-        setSize(getRectF().width() * factor, getRectF().height() * factor);
+    public void multiplyWidthByFactor(float factor) {
+        setSize(getRectF().width() * factor, getRectF().height());
+    }
+
+    public void retainOrigin() {
+        setSize(mScreenWidth * WIDTH_RATIO, mScreenHeight * HEIGHT_RATIO);
+        setLocation((mScreenWidth - mRectF.width()) / 2,
+                mScreenHeight - mScreenHeight * OFFSET_BOTTOM_RATIO);
+        mPaint.setColor(COLOR);
+        setSticky(false);
     }
 }

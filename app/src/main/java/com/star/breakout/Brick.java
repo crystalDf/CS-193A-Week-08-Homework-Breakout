@@ -56,7 +56,11 @@ public class Brick {
         mRectF.offsetTo(x, y);
     }
 
-    public static List<Brick> initBricks(float screenWidth, float screenHeight, Level level) {
+    public static List<Brick> getBricks() {
+        return sBricks;
+    }
+
+    public static void setBricks(float screenWidth, float screenHeight, Level level) {
 
         float spacing = screenWidth * SPACING_RATIO;
 
@@ -89,8 +93,6 @@ public class Brick {
             default:
                 break;
         }
-
-        return sBricks;
     }
 
     private static void initBaseBricks(float width, float height, float spacing,

@@ -167,7 +167,7 @@ public class CommonBall extends Ball {
         }
     }
 
-    public boolean checkForBrickCollision(List<Brick> bricks, Score score, Level level, Message message, DrawingThread drawingThread) {
+    public boolean checkForBrickCollision(List<Brick> bricks, Paddle paddle, Score score, Level level, Message message, DrawingThread drawingThread) {
         for (int i = bricks.size() - 1; i >= 0; i--) {
             if (RectF.intersects(getRectF(), bricks.get(i).getRectF())) {
 
@@ -204,15 +204,20 @@ public class CommonBall extends Ball {
         if (bricks.size() == 0) {
 
             sCommonBalls.clear();
+            BonusBall.getBonusBalls().clear();
 
-            if (level.getCurrentLevel() == Level.TOTAL_LEVELS) {
-                message.setLabel(Message.WIN_RESULT);
-            } else {
+            if (level.getCurrentLevel() < Level.TOTAL_LEVELS) {
                 level.setCurrentLevel(level.getCurrentLevel() + 1);
-                Brick.initBricks(mScreenWidth, mScreenHeight, level);
+
+                Brick.setBricks(mScreenWidth, mScreenHeight, level);
+
                 new CommonBall(mScreenWidth, mScreenHeight);
                 message.setLabel(Message.START_PROMPT);
+            } else {
+                message.setLabel(Message.WIN_RESULT);
             }
+
+            paddle.retainOrigin();
 
             drawingThread.stop();
 
@@ -222,10 +227,13 @@ public class CommonBall extends Ball {
         return false;
     }
 
-    public boolean checkForBottomCollision(Life life, Message message, DrawingThread drawingThread) {
+    public boolean checkForBottomCollision(Paddle paddle, Life life, Message message, DrawingThread drawingThread) {
         if (getRectF().bottom > mScreenHeight) {
 
             if (sCommonBalls.size() == 1) {
+
+                BonusBall.getBonusBalls().clear();
+
                 life.setCurrentLife(life.getCurrentLife() - 1);
 
                 if (life.getCurrentLife() > 0) {
@@ -234,6 +242,8 @@ public class CommonBall extends Ball {
                 } else {
                     message.setLabel(Message.LOSE_RESULT);
                 }
+
+                paddle.retainOrigin();
 
                 drawingThread.stop();
             }
@@ -248,17 +258,17 @@ public class CommonBall extends Ball {
     public void multiplyVelocityByFactor(float factor) {
 
         float newFactor = 1;
-        float velocityXYMax = Math.max(getVelocityX(), getVelocityY());
-        float velocityXYMin = Math.min(getVelocityX(), getVelocityY());
+        float absVelocityXYMax = Math.max(Math.abs(getVelocityX()), Math.abs(getVelocityY()));
+        float absVelocityXYMin = Math.min(Math.abs(getVelocityX()), Math.abs(getVelocityY()));
 
         if (factor > 1) {
-            newFactor = velocityXYMax * factor <=
-                    mScreenWidth * VELOCITY_MAX_RATIO ? factor
-                    : mScreenWidth * VELOCITY_MAX_RATIO / velocityXYMax;
+            newFactor = (((absVelocityXYMax * factor) <= (mScreenWidth * VELOCITY_MAX_RATIO))
+                    ? factor
+                    : (mScreenWidth * VELOCITY_MAX_RATIO / absVelocityXYMax));
         } else if (factor < 1) {
-            newFactor = velocityXYMin * factor >=
-                    mScreenWidth * VELOCITY_MIN_RATIO ? factor
-                    : mScreenWidth * VELOCITY_MIN_RATIO / velocityXYMin;
+            newFactor = (((absVelocityXYMin * factor) >= (mScreenWidth * VELOCITY_MIN_RATIO))
+                    ? factor
+                    : (mScreenWidth * VELOCITY_MIN_RATIO / absVelocityXYMin));
         }
 
         setVelocity(getVelocityX() * newFactor, getVelocityY() * newFactor);

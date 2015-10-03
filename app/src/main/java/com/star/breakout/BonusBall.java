@@ -34,7 +34,6 @@ public class BonusBall extends Ball {
         setLocation(locationX - screenWidth * DIAMETER_RATIO / 2,
                 locationY - screenWidth * DIAMETER_RATIO / 2);
         getPaint().setColor(COLORS[((int) (Math.random() * COLORS.length))]);
-        getPaint().setColor(Color.MAGENTA);
 
         float dx = screenWidth * VELOCITY_X_RATIO;
 
@@ -78,11 +77,11 @@ public class BonusBall extends Ball {
 
         switch (paddle.getPaint().getColor()) {
             case Color.RED:
-                paddle.multiplySizeByFactor(0.5f);
+                paddle.multiplyWidthByFactor(0.5f);
                 break;
 
             case Color.YELLOW:
-                paddle.multiplySizeByFactor(2);
+                paddle.multiplyWidthByFactor(2);
                 break;
 
             case Color.GREEN:
@@ -111,6 +110,11 @@ public class BonusBall extends Ball {
 
             case Color.DKGRAY:
                 paddle.setSticky(false);
+                for (CommonBall commonBall : CommonBall.getCommonBalls()) {
+                    if (commonBall.isSticky()) {
+                        commonBall.setSticky(false);
+                    }
+                }
                 break;
 
             default:
@@ -123,11 +127,11 @@ public class BonusBall extends Ball {
 
         switch (paddle.getPaint().getColor()) {
             case Color.RED:
-                paddle.multiplySizeByFactor(2);
+                paddle.multiplyWidthByFactor(2);
                 break;
 
             case Color.YELLOW:
-                paddle.multiplySizeByFactor(0.5f);
+                paddle.multiplyWidthByFactor(0.5f);
                 break;
 
             case Color.GREEN:
