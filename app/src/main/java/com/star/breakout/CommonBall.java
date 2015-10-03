@@ -13,12 +13,12 @@ public class CommonBall extends Ball {
 
     private static final float DIAMETER_RATIO = 0.06f;
 
-    private static final float VELOCITY_X_MIN_RATIO = 0.005f;
-    private static final float VELOCITY_X_MAX_RATIO = 0.015f;
-    private static final float VELOCITY_Y_MIN_RATIO = 0.015f;
-    private static final float VELOCITY_Y_MAX_RATIO = 0.020f;
-    private static final float VELOCITY_MIN_RATIO = 0.005f;
-    private static final float VELOCITY_MAX_RATIO = 0.040f;
+    private static final float VELOCITY_X_MIN_RATIO = 1 * VELOCITY_RATIO;
+    private static final float VELOCITY_X_MAX_RATIO = 3 * VELOCITY_RATIO;
+    private static final float VELOCITY_Y_MIN_RATIO = 3 * VELOCITY_RATIO;
+    private static final float VELOCITY_Y_MAX_RATIO = 4 * VELOCITY_RATIO;
+    private static final float VELOCITY_MIN_RATIO = 1 * VELOCITY_RATIO;
+    private static final float VELOCITY_MAX_RATIO = 8 * VELOCITY_RATIO;
 
     private static final int DOUBLE_VELOCITY_EVERY_N_COLLISION = 7;
     private static int sCollisionTimes;
@@ -62,7 +62,7 @@ public class CommonBall extends Ball {
             setVelocity(-dx, dy);
         }
 
-        setLaserCapable(true);
+//        setLaserCapable(true);
 
         sCommonBalls.add(this);
 
@@ -167,7 +167,7 @@ public class CommonBall extends Ball {
         }
     }
 
-    public void checkForBrickCollision(List<Brick> bricks, Score score, Level level, Message message, DrawingThread drawingThread) {
+    public boolean checkForBrickCollision(List<Brick> bricks, Score score, Level level, Message message, DrawingThread drawingThread) {
         for (int i = bricks.size() - 1; i >= 0; i--) {
             if (RectF.intersects(getRectF(), bricks.get(i).getRectF())) {
 
@@ -215,24 +215,34 @@ public class CommonBall extends Ball {
             }
 
             drawingThread.stop();
+
+            return true;
         }
+
+        return false;
     }
 
-    public void checkForBottomCollision(Life life, Message message, DrawingThread drawingThread) {
+    public boolean checkForBottomCollision(Life life, Message message, DrawingThread drawingThread) {
         if (getRectF().bottom > mScreenHeight) {
-            sCommonBalls.remove(this);
-            life.setCurrentLife(life.getCurrentLife() - 1);
 
-            if (life.getCurrentLife() > 0) {
-                new CommonBall(mScreenWidth, mScreenHeight);
-                message.setLabel(Message.START_PROMPT);
-            } else {
-                message.setLabel(Message.LOSE_RESULT);
+            if (sCommonBalls.size() == 1) {
+                life.setCurrentLife(life.getCurrentLife() - 1);
+
+                if (life.getCurrentLife() > 0) {
+                    new CommonBall(mScreenWidth, mScreenHeight);
+                    message.setLabel(Message.START_PROMPT);
+                } else {
+                    message.setLabel(Message.LOSE_RESULT);
+                }
+
+                drawingThread.stop();
             }
 
-            drawingThread.stop();
+            return sCommonBalls.remove(this);
 
         }
+
+        return false;
     }
 
     public void multiplyVelocityByFactor(float factor) {

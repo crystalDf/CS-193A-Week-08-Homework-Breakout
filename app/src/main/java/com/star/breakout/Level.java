@@ -8,7 +8,7 @@ public class Level extends Label {
     public static final int INIT_LEVEL = 2;
     public static final int TOTAL_LEVELS = 5;
 
-    public static final float INIT_ENHANCED_PROBABILITY = 0.05f;
+    public static final float INIT_ENHANCED_PROBABILITY = 0.5f;
 
     private static final float OFFSET_LEFT_RATIO = 0.05f;
     private static final float OFFSET_TOP_RATIO = 0.05f;
@@ -68,7 +68,7 @@ public class Level extends Label {
         for (int i = 0; i < Brick.COLORS.length; i++) {
             if (brick.getPaint().getColor() == Brick.COLORS[i]) {
                 if (Math.random() < getCurrentEnhancedProbability()) {
-                    new PriceBall(mScreenWidth, mScreenHeight,
+                    new BonusBall(mScreenWidth, mScreenHeight,
                             (brick.getRectF().left + brick.getRectF().right) / 2,
                             (brick.getRectF().top + brick.getRectF().bottom) / 2);
                     break;

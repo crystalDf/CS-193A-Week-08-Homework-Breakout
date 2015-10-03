@@ -6,6 +6,8 @@ import android.graphics.RectF;
 
 public abstract class Ball {
 
+    public static final float VELOCITY_RATIO = 0.0025f;
+
     private RectF mRectF;
     private Paint mPaint;
 

@@ -21,7 +21,7 @@ public class BreakoutView extends View {
 
     private List<Brick> mBricks;
     private List<CommonBall> mCommonBalls;
-    private List<PriceBall> mPriceBalls;
+    private List<BonusBall> mBonusBalls;
     private List<BoomBall> mBoomBalls;
 
     private Level mLevel;
@@ -49,7 +49,7 @@ public class BreakoutView extends View {
         new CommonBall(mScreenWidth, mScreenHeight);
 
         mCommonBalls = CommonBall.getCommonBalls();
-        mPriceBalls = PriceBall.getPriceBalls();
+        mBonusBalls = BonusBall.getBonusBalls();
 
         mDrawingThread = new DrawingThread(this, DrawingThread.FPS);
     }
@@ -68,8 +68,8 @@ public class BreakoutView extends View {
             canvas.drawOval(commonBall.getRectF(), commonBall.getPaint());
         }
 
-        for (PriceBall priceBall : mPriceBalls) {
-            canvas.drawOval(priceBall.getRectF(), priceBall.getPaint());
+        for (BonusBall bonusBall : mBonusBalls) {
+            canvas.drawOval(bonusBall.getRectF(), bonusBall.getPaint());
         }
 
         canvas.drawText(mLevel.getLabel(), mLevel.getOffsetLeft(), mLevel.getOffsetTop(),
@@ -87,20 +87,23 @@ public class BreakoutView extends View {
 
     private void updateBalls() {
 
-        for (CommonBall commonBall : mCommonBalls) {
-            commonBall.move();
+        for (int i = 0; i < mCommonBalls.size();) {
+            mCommonBalls.get(i).move();
 
-            commonBall.checkForSideCollision();
-            commonBall.checkForPaddleCollision(mPaddle);
-            commonBall.checkForBrickCollision(mBricks, mScore, mLevel, mMessage, mDrawingThread);
-            commonBall.checkForBottomCollision(mLife, mMessage, mDrawingThread);
+            mCommonBalls.get(i).checkForSideCollision();
+            mCommonBalls.get(i).checkForPaddleCollision(mPaddle);
+
+            if (!mCommonBalls.get(i).checkForBrickCollision(mBricks, mScore, mLevel, mMessage, mDrawingThread)
+                    && !mCommonBalls.get(i).checkForBottomCollision(mLife, mMessage, mDrawingThread)) {
+                i++;
+            }
         }
 
-        for (int i = 0; i < mPriceBalls.size();) {
-            mPriceBalls.get(i).move();
+        for (int i = 0; i < mBonusBalls.size();) {
+            mBonusBalls.get(i).move();
 
-            if (!mPriceBalls.get(i).checkForPaddleCollision(mPaddle, mBricks)
-                    && !mPriceBalls.get(i).checkForBottomCollision()) {
+            if (!mBonusBalls.get(i).checkForPaddleCollision(mPaddle, mBricks)
+                    && !mBonusBalls.get(i).checkForBottomCollision()) {
                 i++;
             }
         }

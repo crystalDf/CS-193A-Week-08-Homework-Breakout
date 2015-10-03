@@ -7,7 +7,7 @@ import android.graphics.RectF;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PriceBall extends Ball {
+public class BonusBall extends Ball {
 
     public static final int[] COLORS = {
             Color.RED, Color.YELLOW, Color.GREEN, Color.CYAN, Color.BLUE, Color.MAGENTA,
@@ -15,16 +15,16 @@ public class PriceBall extends Ball {
 
     private static final float DIAMETER_RATIO = 0.04f;
 
-    private static final float VELOCITY_X_RATIO = 0;
-    private static final float VELOCITY_Y_MIN_RATIO = 0.015f;
-    private static final float VELOCITY_Y_MAX_RATIO = 0.020f;
+    private static final float VELOCITY_X_RATIO = 0 * VELOCITY_RATIO;
+    private static final float VELOCITY_Y_MIN_RATIO = 3 * VELOCITY_RATIO;
+    private static final float VELOCITY_Y_MAX_RATIO = 4 * VELOCITY_RATIO;
 
-    private static List<PriceBall> sPriceBalls = new ArrayList<>();
+    private static List<BonusBall> sBonusBalls = new ArrayList<>();
 
     private float mScreenWidth;
     private float mScreenHeight;
 
-    public PriceBall(float screenWidth, float screenHeight, float locationX, float locationY) {
+    public BonusBall(float screenWidth, float screenHeight, float locationX, float locationY) {
         super();
 
         mScreenWidth = screenWidth;
@@ -34,6 +34,7 @@ public class PriceBall extends Ball {
         setLocation(locationX - screenWidth * DIAMETER_RATIO / 2,
                 locationY - screenWidth * DIAMETER_RATIO / 2);
         getPaint().setColor(COLORS[((int) (Math.random() * COLORS.length))]);
+        getPaint().setColor(Color.MAGENTA);
 
         float dx = screenWidth * VELOCITY_X_RATIO;
 
@@ -43,11 +44,11 @@ public class PriceBall extends Ball {
 
         setVelocity(dx, dy);
 
-        sPriceBalls.add(this);
+        sBonusBalls.add(this);
     }
 
-    public static List<PriceBall> getPriceBalls() {
-        return sPriceBalls;
+    public static List<BonusBall> getBonusBalls() {
+        return sBonusBalls;
     }
 
     public boolean checkForPaddleCollision(Paddle paddle, List<Brick> bricks) {
@@ -58,7 +59,7 @@ public class PriceBall extends Ball {
 
             addEnhancedCapability(paddle, bricks);
 
-            return sPriceBalls.remove(this);
+            return sBonusBalls.remove(this);
         }
 
         return false;
@@ -67,7 +68,7 @@ public class PriceBall extends Ball {
 
     public boolean checkForBottomCollision() {
         if (getRectF().bottom > mScreenHeight) {
-            return sPriceBalls.remove(this);
+            return sBonusBalls.remove(this);
         }
 
         return false;
