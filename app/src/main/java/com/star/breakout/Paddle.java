@@ -57,16 +57,8 @@ public class Paddle {
         return mRectF;
     }
 
-    public void setRectF(RectF rectF) {
-        mRectF = rectF;
-    }
-
     public Paint getPaint() {
         return mPaint;
-    }
-
-    public void setPaint(Paint paint) {
-        mPaint = paint;
     }
 
     public boolean isSticky() {

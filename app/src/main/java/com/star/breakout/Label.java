@@ -6,7 +6,7 @@ import android.graphics.Paint;
 public class Label {
 
     private Paint mPaint;
-    private String mLabel;
+    private String mLabel = "";
 
     private float mOffsetLeft;
     private float mOffsetTop;
@@ -17,10 +17,6 @@ public class Label {
 
     public Paint getPaint() {
         return mPaint;
-    }
-
-    public void setPaint(Paint paint) {
-        mPaint = paint;
     }
 
     public String getLabel() {

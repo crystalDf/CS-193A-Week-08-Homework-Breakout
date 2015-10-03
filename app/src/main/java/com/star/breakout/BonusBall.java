@@ -111,9 +111,7 @@ public class BonusBall extends Ball {
             case Color.DKGRAY:
                 paddle.setSticky(false);
                 for (CommonBall commonBall : CommonBall.getCommonBalls()) {
-                    if (commonBall.isSticky()) {
-                        commonBall.setSticky(false);
-                    }
+                    commonBall.setSticky(false);
                 }
                 break;
 

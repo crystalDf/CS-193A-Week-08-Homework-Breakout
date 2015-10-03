@@ -62,8 +62,6 @@ public class CommonBall extends Ball {
             setVelocity(-dx, dy);
         }
 
-//        setLaserCapable(true);
-
         sCommonBalls.add(this);
 
         if (sCommonBalls.size() == 1) {
@@ -84,15 +82,16 @@ public class CommonBall extends Ball {
     }
 
     public void setSticky(boolean sticky) {
-        mSticky = sticky;
 
         if (sticky) {
             mLastVelocityX = getVelocityX();
             mLastVelocityY = getVelocityY();
             setVelocity(0, 0);
-        } else {
+        } else if (isSticky()) {
             setVelocity(mLastVelocityX, mLastVelocityY);
         }
+
+        mSticky = sticky;
     }
 
     public float getOffsetByPaddleX() {
@@ -167,7 +166,7 @@ public class CommonBall extends Ball {
         }
     }
 
-    public boolean checkForBrickCollision(List<Brick> bricks, Paddle paddle, Score score, Level level, Message message, DrawingThread drawingThread) {
+    public boolean checkForBrickCollision(List<Brick> bricks, Paddle paddle, Score score, Level level, Message message, HighestScore highestScore, DrawingThread drawingThread) {
         for (int i = bricks.size() - 1; i >= 0; i--) {
             if (RectF.intersects(getRectF(), bricks.get(i).getRectF())) {
 
@@ -184,6 +183,9 @@ public class CommonBall extends Ball {
 
                     score.setCurrentScore(score.getCurrentScore()
                             + score.calculateScore(bricks.get(i)));
+                    if (score.getCurrentScore() > highestScore.getHighestScore()) {
+                        highestScore.setHighestScore(score.getCurrentScore());
+                    }
 
                     level.determineEnhancedBall(bricks.get(i));
 
@@ -193,6 +195,10 @@ public class CommonBall extends Ball {
 
                     score.setCurrentScore(score.getCurrentScore()
                             + score.calculateScore(bricks.get(i)));
+
+                    if (score.getCurrentScore() > highestScore.getHighestScore()) {
+                        highestScore.setHighestScore(score.getCurrentScore());
+                    }
 
                     level.determineEnhancedBall(bricks.get(i));
 
@@ -205,6 +211,7 @@ public class CommonBall extends Ball {
 
             sCommonBalls.clear();
             BonusBall.getBonusBalls().clear();
+            BoomBall.getBoomBalls().clear();
 
             if (level.getCurrentLevel() < Level.TOTAL_LEVELS) {
                 level.setCurrentLevel(level.getCurrentLevel() + 1);
@@ -232,11 +239,13 @@ public class CommonBall extends Ball {
 
             if (sCommonBalls.size() == 1) {
 
+                sCommonBalls.clear();
                 BonusBall.getBonusBalls().clear();
+                BoomBall.getBoomBalls().clear();
 
                 life.setCurrentLife(life.getCurrentLife() - 1);
 
-                if (life.getCurrentLife() > 0) {
+                if (life.getCurrentLife() > Life.END_LIVES) {
                     new CommonBall(mScreenWidth, mScreenHeight);
                     message.setLabel(Message.START_PROMPT);
                 } else {
@@ -246,9 +255,11 @@ public class CommonBall extends Ball {
                 paddle.retainOrigin();
 
                 drawingThread.stop();
-            }
 
-            return sCommonBalls.remove(this);
+                return true;
+            } else {
+                sCommonBalls.remove(this);
+            }
 
         }
 
@@ -273,6 +284,5 @@ public class CommonBall extends Ball {
 
         setVelocity(getVelocityX() * newFactor, getVelocityY() * newFactor);
     }
-
 
 }

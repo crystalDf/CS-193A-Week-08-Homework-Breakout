@@ -35,16 +35,8 @@ public class Brick {
         return mRectF;
     }
 
-    public void setRectF(RectF rectF) {
-        mRectF = rectF;
-    }
-
     public Paint getPaint() {
         return mPaint;
-    }
-
-    public void setPaint(Paint paint) {
-        mPaint = paint;
     }
 
     public void setSize(float width, float height) {

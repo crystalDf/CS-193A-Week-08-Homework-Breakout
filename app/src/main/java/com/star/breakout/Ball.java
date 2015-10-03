@@ -11,12 +11,8 @@ public abstract class Ball {
     private RectF mRectF;
     private Paint mPaint;
 
-    private float mRadius;
-
     private float mVelocityX;
     private float mVelocityY;
-
-    private boolean mRemoved;
 
     public Ball() {
         mRectF = new RectF();
@@ -27,24 +23,8 @@ public abstract class Ball {
         return mRectF;
     }
 
-    public void setRectF(RectF rectF) {
-        mRectF = rectF;
-    }
-
     public Paint getPaint() {
         return mPaint;
-    }
-
-    public void setPaint(Paint paint) {
-        mPaint = paint;
-    }
-
-    public float getRadius() {
-        return mRadius;
-    }
-
-    public void setRadius(float radius) {
-        mRadius = radius;
     }
 
     public float getVelocityX() {
@@ -61,14 +41,6 @@ public abstract class Ball {
 
     public void setVelocityY(float velocityY) {
         mVelocityY = velocityY;
-    }
-
-    public boolean isRemoved() {
-        return mRemoved;
-    }
-
-    public void setRemoved(boolean removed) {
-        mRemoved = removed;
     }
 
     public void setSize(float width, float height) {

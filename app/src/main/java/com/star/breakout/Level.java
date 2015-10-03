@@ -5,10 +5,14 @@ import android.graphics.Color;
 
 public class Level extends Label {
 
-    public static final int INIT_LEVEL = 2;
+    public static final int INIT_LEVEL = 1;
     public static final int TOTAL_LEVELS = 5;
 
-    public static final float INIT_ENHANCED_PROBABILITY = 0.5f;
+    public static final float INIT_ENHANCED_PROBABILITY = 0;
+    public static final float STANDARD_ENHANCED_PROBABILITY = 0.5f;
+
+    public static final boolean INIT_BOOM_ENABLED = false;
+    public static final boolean STANDARD_BOOM_ENABLED = true;
 
     private static final float OFFSET_LEFT_RATIO = 0.05f;
     private static final float OFFSET_TOP_RATIO = 0.05f;
@@ -16,10 +20,13 @@ public class Level extends Label {
     private static final int COLOR = Color.BLACK;
     private static final int TEXT_SIZE = 50;
 
-    private static final String LEVEL = "Level: ";
+    public static final String LEVEL = "Level: ";
+    public static final String ENHANCED_PROBABILITY = "Enhanced probability: ";
+    public static final String BOOM_ENABLED = "Boom enabled: ";
 
     private int mCurrentLevel;
     private float mCurrentEnhancedProbability;
+    private boolean mBoomEnabled;
 
     private float mScreenWidth;
     private float mScreenHeight;
@@ -47,10 +54,16 @@ public class Level extends Label {
 
     public void setCurrentLevel(int currentLevel) {
         mCurrentLevel = currentLevel;
-        if (currentLevel == 1) {
-            setCurrentEnhancedProbability(0);
-        } else {
+        if (currentLevel == INIT_LEVEL) {
             setCurrentEnhancedProbability(INIT_ENHANCED_PROBABILITY);
+        } else {
+            setCurrentEnhancedProbability(STANDARD_ENHANCED_PROBABILITY);
+        }
+
+        if (currentLevel < (TOTAL_LEVELS - 1)) {
+            setBoomEnabled(Level.INIT_BOOM_ENABLED);
+        } else {
+            setBoomEnabled(Level.STANDARD_BOOM_ENABLED);
         }
 
         setLabel(LEVEL + mCurrentLevel);
@@ -62,6 +75,14 @@ public class Level extends Label {
 
     public void setCurrentEnhancedProbability(float currentEnhancedProbability) {
         mCurrentEnhancedProbability = currentEnhancedProbability;
+    }
+
+    public boolean isBoomEnabled() {
+        return mBoomEnabled;
+    }
+
+    public void setBoomEnabled(boolean boomEnabled) {
+        mBoomEnabled = boomEnabled;
     }
 
     public void determineEnhancedBall(Brick brick) {

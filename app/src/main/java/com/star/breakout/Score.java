@@ -13,7 +13,7 @@ public class Score extends Label {
     private static final int COLOR = Color.BLACK;
     private static final int TEXT_SIZE = 50;
 
-    private static final String SCORE = "Score: ";
+    public static final String SCORE = "Score: ";
 
     private int mCurrentScore;
 

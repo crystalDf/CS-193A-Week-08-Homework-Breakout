@@ -16,6 +16,8 @@ public class Message extends Label {
     public static final String WIN_RESULT = "You win!";
     public static final String LOSE_RESULT = "You lose...";
 
+    public static final String MESSAGE = "Message: ";
+
     public Message(float screenWidth, float screenHeight) {
         super();
 
