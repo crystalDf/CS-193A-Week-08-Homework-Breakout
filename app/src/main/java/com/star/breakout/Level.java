@@ -9,7 +9,7 @@ public class Level extends Label {
     public static final int TOTAL_LEVELS = 5;
 
     public static final float INIT_ENHANCED_PROBABILITY = 0;
-    public static final float STANDARD_ENHANCED_PROBABILITY = 0.5f;
+    public static final float STANDARD_ENHANCED_PROBABILITY = 0.2f;
 
     public static final boolean INIT_BOOM_ENABLED = false;
     public static final boolean STANDARD_BOOM_ENABLED = true;
